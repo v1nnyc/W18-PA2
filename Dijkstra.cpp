@@ -13,10 +13,45 @@
 #include <queue>
 #include <vector>
 
+#include <iostream>
+
+template <class T>
+bool comparePQ(Vertex<T> * vertex1, Vertex<T> * vertex2){
+	return vertex1->distance < vertex2->distance;
+}
+
 template <class T>
 float dijkstra(Graph<T>&g, T src) {
   // TODO: Implement Dijkstra's Algorithm
-  return 0.0;
+	// run dijkstra to find every node in the graph
+	//calculate path edges for all of the edges
+	//std::priority_queue<Vertex<T>> priority_queue;
+	std::priority_queue<Vertex<T> *, std::vector<Vertex<T> *>, bool(*)(Vertex<T> *, Vertex<T> *)> priority_queue(comparePQ);
+
+	auto source = g.vertices.find(src)->second;
+	float count = 0;
+
+	source->distance = 0;
+	source->visited = true;
+	priority_queue.push(source);
+
+	while(!priority_queue.empty()){
+		auto vertex = priority_queue.top();
+		priority_queue.pop();
+		for(auto it = vertex->edges.begin(); it != vertex->edges.end(); it++){
+			Vertex<T> * neighbor = g.vertices.find(*it)->second;
+			auto length = vertex->distance + g.get_weight(vertex->id, neighbor->id);
+			if(length < neighbor->distance && neighbor->visited != true){
+				neighbor->distance = length;
+				count += g.get_weight(vertex->id, neighbor->id);
+				neighbor->visited = true;
+				priority_queue.push(neighbor);
+			}
+		}
+	}
+
+
+  return count;
 }
 
 #endif
