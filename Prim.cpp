@@ -51,6 +51,7 @@ float prim(Graph<T>& g, T src) {
 					}
 					count += length;
 					neighbor->distance = length;
+					neighbor->visited = true;
 					priority_queue.push(neighbor);
 				}
 			}
