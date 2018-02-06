@@ -17,7 +17,7 @@
 
 template <class T>
 bool comparePQ(Vertex<T> * vertex1, Vertex<T> * vertex2){
-	return vertex1->distance < vertex2->distance;
+	return vertex1->distance > vertex2->distance;
 }
 
 template <class T>

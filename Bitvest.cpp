@@ -16,8 +16,14 @@
 #include "Graph.hpp"
 #include "Bitvest.hpp"
 // include more libraries as needed
+static float price = 100;
+
+int rateCheck(float start, float firstTF, float exRate, float secondTF){
+	return (start * (1-firstTF) * exRate * (1 - secondTF));
+}
 
 bool bitvest(std::list<Exchange> exchanges, std::map<std::string, float> fees) {
+
   //TODO: Implement an algorithm to determine if a profitable trade is possible
   return false;
 }
