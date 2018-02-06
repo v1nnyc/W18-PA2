@@ -16,14 +16,47 @@
 #include "Graph.hpp"
 #include "Bitvest.hpp"
 // include more libraries as needed
-static float price = 100;
+static float startPrice = 100;
 
-int rateCheck(float start, float firstTF, float exRate, float secondTF){
+float rateCheck(float start, float firstTF, float exRate, float secondTF){
 	return (start * (1-firstTF) * exRate * (1 - secondTF));
 }
 
 bool bitvest(std::list<Exchange> exchanges, std::map<std::string, float> fees) {
+	std::map<std::string, float> weights;
+	for(auto itFees = fees.begin(); itFees != fees.end(); itFees++){
+		weights.emplace(itFees->first, 0);
+	}
 
+	auto startIt = weights.find(fees.begin()->first);
+	startIt->second = startPrice;
+	auto startt = startIt->first;
+
+	//std::cout<<startt<<"\n";
+
+	auto curr = startt;
+	for(auto itFees = fees.begin(); itFees != fees.end(); itFees++){
+		for(auto itEx = exchanges.begin(); itEx != exchanges.end(); itEx++){
+			curr = itFees->first;
+			if(itEx->in == curr){
+				std::cout<<"curr is: " << curr << "\n";
+				float start = weights.find(curr)->second;
+				//std::cout<<start<<"\n";
+				float firstTF = fees.find(curr)->second;
+				float exRate = itEx->rate;
+				float secondTF = fees.find(itEx->out)->second;	
+				float rate = rateCheck(start, firstTF, exRate, secondTF);
+				if(rate > weights.find(itEx->out)->second){
+					weights.find(itEx->out)->second = rate;
+					std::cout<< "rate for: " <<  itEx->out <<"is: " << rate << "\n";
+				}
+				
+			}
+		}
+	}
+	if(startIt->second > startPrice){
+		return true;
+	}
   //TODO: Implement an algorithm to determine if a profitable trade is possible
   return false;
 }
