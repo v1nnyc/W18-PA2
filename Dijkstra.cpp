@@ -22,10 +22,6 @@ bool comparePQ(Vertex<T> * vertex1, Vertex<T> * vertex2){
 
 template <class T>
 float dijkstra(Graph<T>&g, T src) {
-  // TODO: Implement Dijkstra's Algorithm
-	// run dijkstra to find every node in the graph
-	//calculate path edges for all of the edges
-	//std::priority_queue<Vertex<T>> priority_queue;
 	std::priority_queue<Vertex<T> *, std::vector<Vertex<T> *>, bool(*)(Vertex<T> *, Vertex<T> *)> priority_queue(comparePQ);
 
 	auto source = g.vertices.find(src)->second;
@@ -49,8 +45,7 @@ float dijkstra(Graph<T>&g, T src) {
 			}
 		}
 	}
-
-
+	
   return count;
 }
 
