@@ -24,24 +24,26 @@ float rateCheck(float start, float firstTF, float exRate, float secondTF){
 
 bool bitvest(std::list<Exchange> exchanges, std::map<std::string, float> fees) {
 	std::map<std::string, float> weights;
+	std::map<std::string, float> origWeights;
 	for(auto itFees = fees.begin(); itFees != fees.end(); itFees++){
 		weights.emplace(itFees->first, 0);
+		origWeights.emplace(itFees->first, 0);
 	}
 
 	auto startIt = weights.find(fees.begin()->first);
 	startIt->second = startPrice;
 	auto startt = startIt->first;
-
-	//std::cout<<startt<<"\n";
-
 	auto curr = startt;
+	
+	//iterate through fees like vertices
 	for(auto itFees = fees.begin(); itFees != fees.end(); itFees++){
+		//for each edge u,v
 		for(auto itEx = exchanges.begin(); itEx != exchanges.end(); itEx++){
 			curr = itFees->first;
+			//updating weight of each "vertex"
 			if(itEx->in == curr){
 				std::cout<<"curr is: " << curr << "\n";
 				float start = weights.find(curr)->second;
-				//std::cout<<start<<"\n";
 				float firstTF = fees.find(curr)->second;
 				float exRate = itEx->rate;
 				float secondTF = fees.find(itEx->out)->second;	
