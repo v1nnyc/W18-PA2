@@ -36,13 +36,14 @@ float prim(Graph<T>& g, T src) {
 		priority_queue.pop();
 		parent->visited = true;
 		//reduce runtime by breaking out of loop when everything has been visited
-		if(++visitedCount == g.vertices.size()){
+		/*if(++visitedCount == g.vertices.size()){
 			break;
-		}
+		}*/
 		for(auto it = parent->edges.begin(); it != parent->edges.end(); it++){
 			Vertex<T> * neighbor = g.vertices.find(*it)->second;
 			if(!neighbor->visited){
 				auto length = g.get_weight(parent->id, neighbor->id);
+				std::cout<<"vertex is: " << neighbor->id << " and weight is: " << neighbor->distance << "\n";
 				if(neighbor->distance > length){
 					neighbor->distance = length;
 					priority_queue.push(neighbor);
@@ -56,6 +57,6 @@ float prim(Graph<T>& g, T src) {
 		total += it->second->distance;
 	}
 
-  return total-2;
+  return total;
 }
 #endif
