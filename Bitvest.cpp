@@ -27,7 +27,7 @@ bool bitvest(std::list<Exchange> exchanges, std::map<std::string, float> fees) {
 	std::map<std::string, float> origWeights;
 	for(auto itFees = fees.begin(); itFees != fees.end(); itFees++){
 		weights.emplace(itFees->first, 0);
-		origWeights.emplace(itFees->first, 0);
+		//origWeights.emplace(itFees->first, 0);
 	}
 
 	auto startIt = weights.find(fees.begin()->first);
@@ -35,27 +35,30 @@ bool bitvest(std::list<Exchange> exchanges, std::map<std::string, float> fees) {
 	auto startt = startIt->first;
 	auto curr = startt;
 	
+	for(int i = 0; i < 2; i++){
 	//iterate through fees like vertices
-	for(auto itFees = fees.begin(); itFees != fees.end(); itFees++){
-		//for each edge u,v
-		for(auto itEx = exchanges.begin(); itEx != exchanges.end(); itEx++){
-			curr = itFees->first;
-			//updating weight of each "vertex"
-			if(itEx->in == curr){
-				std::cout<<"curr is: " << curr << "\n";
-				float start = weights.find(curr)->second;
-				float firstTF = fees.find(curr)->second;
-				float exRate = itEx->rate;
-				float secondTF = fees.find(itEx->out)->second;	
-				float rate = rateCheck(start, firstTF, exRate, secondTF);
-				if(rate > weights.find(itEx->out)->second){
-					weights.find(itEx->out)->second = rate;
-					std::cout<< "rate for: " <<  itEx->out <<"is: " << rate << "\n";
+		for(auto itFees = fees.begin(); itFees != fees.end(); itFees++){
+			//for each edge u,v
+			for(auto itEx = exchanges.begin(); itEx != exchanges.end(); itEx++){
+				curr = itFees->first;
+				//updating weight of each "vertex"
+				if(itEx->in == curr){
+					std::cout<<"curr is: " << curr << "\n";
+					float start = weights.find(curr)->second;
+					float firstTF = fees.find(curr)->second;
+					float exRate = itEx->rate;
+					float secondTF = fees.find(itEx->out)->second;	
+					float rate = rateCheck(start, firstTF, exRate, secondTF);
+					if(rate > weights.find(itEx->out)->second){
+						weights.find(itEx->out)->second = rate;
+						std::cout<< "rate for: " <<  itEx->out <<"is: " << rate << "\n";
+					}
+					
 				}
-				
 			}
 		}
 	}
+
 	if(startIt->second > startPrice){
 		return true;
 	}

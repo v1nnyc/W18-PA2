@@ -23,7 +23,7 @@ bool comparePQ(Vertex<T> * vertex1, Vertex<T> * vertex2){
 }
 
 template <class T>
-float dijkstra(Graph<T>&g, T src) {
+float primdijk(Graph<T>& g, T src, float c) {
 	std::priority_queue<Vertex<T> *, std::vector<Vertex<T> *>, bool(*)(Vertex<T> *, Vertex<T> *)> priority_queue(comparePQ);
 
 	auto source = g.vertices.find(src)->second;
@@ -38,72 +38,22 @@ float dijkstra(Graph<T>&g, T src) {
 		priority_queue.pop();
 		for(auto it = vertex->edges.begin(); it != vertex->edges.end(); it++){
 			Vertex<T> * neighbor = g.vertices.find(*it)->second;
-			auto length = vertex->distance + g.get_weight(vertex->id, neighbor->id);
-			if(length < neighbor->distance && neighbor->visited != true){
-				neighbor->distance = length;
-				count += g.get_weight(vertex->id, neighbor->id);
-				neighbor->visited = true;
-				priority_queue.push(neighbor);
-			}
-		}
-	}
-	
-  return count;
-}
-
-
-template <class T>
-float prim(Graph<T>& g, T src) {
-
-	auto source = g.vertices.find(src)->second;
-	float count = 0;
-	int visitedCount = 0;
-
-	source->distance = 0;
-	source->visited = true;
-
-	std::priority_queue<Vertex<T> *, std::vector<Vertex<T> *>, bool(*)(Vertex<T> *, Vertex<T> *)> priority_queue(comparePQ);
-	
-	priority_queue.push(source);
-
-	while(!priority_queue.empty()){
-		auto parent = priority_queue.top();
-		priority_queue.pop();
-		parent->visited = true;
-		//reduce runtime by breaking out of loop when everything has been visited
-		if(++visitedCount == g.vertices.size()){
-			break;
-		}
-		for(auto it = parent->edges.begin(); it != parent->edges.end(); it++){
-			Vertex<T> * neighbor = g.vertices.find(*it)->second;
 			if(!neighbor->visited){
-				auto length = g.get_weight(parent->id, neighbor->id);
+				auto length = c*vertex->distance + g.get_weight(vertex->id, neighbor->id);
 				if(neighbor->distance > length){
-					if(neighbor->distance != FLT_MAX){
-						count -= neighbor->distance;
-					}
-					count += length;
 					neighbor->distance = length;
+					count += g.get_weight(vertex->id, neighbor->id);
+					neighbor->visited = true;
 					priority_queue.push(neighbor);
 				}
 			}
 		}
 	}
-  return count;
-}
-
-
-
-template <class T>
-float primdijk(Graph<T>& g, T src, float c) {
-	if(c < 0.5){
-		//return 5.0;
-		return prim(g, src);
+	float total = 0;
+	for(auto it = g.vertices.begin(); it != g.vertices.end(); it++){
+		total += it->second->distance;
 	}
-	else{
-		return dijkstra(g,src);
-	}
-  // TODO: implement PrimDijk
-  //return 0.0;
+	
+  return count-2;
 }
 #endif

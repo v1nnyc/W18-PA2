@@ -36,17 +36,23 @@ float dijkstra(Graph<T>&g, T src) {
 		priority_queue.pop();
 		for(auto it = vertex->edges.begin(); it != vertex->edges.end(); it++){
 			Vertex<T> * neighbor = g.vertices.find(*it)->second;
-			auto length = vertex->distance + g.get_weight(vertex->id, neighbor->id);
-			if(length < neighbor->distance && neighbor->visited != true){
-				neighbor->distance = length;
-				count += g.get_weight(vertex->id, neighbor->id);
-				neighbor->visited = true;
-				priority_queue.push(neighbor);
+			if(!neighbor->visited){
+				auto length = vertex->distance + g.get_weight(vertex->id, neighbor->id);
+				if(neighbor->distance > length){
+					neighbor->distance = length;
+					count += g.get_weight(vertex->id, neighbor->id);
+					neighbor->visited = true;
+					priority_queue.push(neighbor);
+				}
 			}
 		}
 	}
+	float total = 0;
+	for(auto it = g.vertices.begin(); it != g.vertices.end(); it++){
+		total += it->second->distance;
+	}
 	
-  return count;
+  return (count>total)?:count;
 }
 
 #endif

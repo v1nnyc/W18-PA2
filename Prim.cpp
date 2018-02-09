@@ -23,7 +23,6 @@ template <class T>
 float prim(Graph<T>& g, T src) {
 
 	auto source = g.vertices.find(src)->second;
-	float count = 0;
 	int visitedCount = 0;
 
 	source->distance = 0;
@@ -32,7 +31,6 @@ float prim(Graph<T>& g, T src) {
 	std::priority_queue<Vertex<T> *, std::vector<Vertex<T> *>, bool(*)(Vertex<T> *, Vertex<T> *)> priority_queue(comparePQ);
 	
 	priority_queue.push(source);
-
 	while(!priority_queue.empty()){
 		auto parent = priority_queue.top();
 		priority_queue.pop();
@@ -46,16 +44,18 @@ float prim(Graph<T>& g, T src) {
 			if(!neighbor->visited){
 				auto length = g.get_weight(parent->id, neighbor->id);
 				if(neighbor->distance > length){
-					if(neighbor->distance != FLT_MAX){
-						count -= neighbor->distance;
-					}
-					count += length;
 					neighbor->distance = length;
 					priority_queue.push(neighbor);
 				}
 			}
 		}
 	}
-  return count;
+
+	float total = 0;
+	for(auto it = g.vertices.begin(); it != g.vertices.end(); it++){
+		total += it->second->distance;
+	}
+
+  return total-2;
 }
 #endif
