@@ -26,14 +26,15 @@ float dijkstra(Graph<T>&g, T src) {
 
 	Vertex<T>* source = g.vertices.find(src)->second;
 	priority_queue.push(source);
+	source->distance = 0;
 	float total = 0;
 	while(!priority_queue.empty()){
 		auto vertex = priority_queue.top();
 		priority_queue.pop();
-		std::cout<<"pooped: " << vertex->id <<std::endl;
+		//std::cout<<"pooped: " << vertex->id <<std::endl;
 		if(!vertex->visited){
 			total += g.get_weight(vertex->id, vertex->prev);
-			std::cout<<"spt +" << g.get_weight(vertex->id, vertex->prev) << std::endl;
+			//std::cout<<"spt +" << g.get_weight(vertex->id, vertex->prev) << std::endl;
 		if(!vertex->visited){
 			vertex->visited = true;
 			int fuck = 0;
@@ -45,7 +46,7 @@ float dijkstra(Graph<T>&g, T src) {
 					neighbor->distance = fuck;
 					if(!neighbor->visited){
 					priority_queue.push(neighbor);
-					std::cout<<"pushing: " << neighbor->id << std::endl;
+					//std::cout<<"pushing: " << neighbor->id << std::endl;
 				}
 				}
 			}
