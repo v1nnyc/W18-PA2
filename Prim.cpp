@@ -36,9 +36,9 @@ float prim(Graph<T>& g, T src) {
 		priority_queue.pop();
 		parent->visited = true;
 		//reduce runtime by breaking out of loop when everything has been visited
-		/*if(++visitedCount == g.vertices.size()){
+		if(++visitedCount == g.vertices.size()){
 			break;
-		}*/
+		}
 		for(auto it = parent->edges.begin(); it != parent->edges.end(); it++){
 			Vertex<T> * neighbor = g.vertices.find(*it)->second;
 			if(!neighbor->visited){

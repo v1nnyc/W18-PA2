@@ -17,7 +17,7 @@
 
 template <class T>
 bool comparePQ(Vertex<T> * vertex1, Vertex<T> * vertex2){
-	return vertex1->distance < vertex2->distance;
+	return vertex1->distance > vertex2->distance;
 }
 
 template <class T>
@@ -31,29 +31,21 @@ float dijkstra(Graph<T>&g, T src) {
 	while(!priority_queue.empty()){
 		auto vertex = priority_queue.top();
 		priority_queue.pop();
-		//std::cout<<"pooped: " << vertex->id <<std::endl;
 		if(!vertex->visited){
 			total += g.get_weight(vertex->id, vertex->prev);
-			//std::cout<<"spt +" << g.get_weight(vertex->id, vertex->prev) << std::endl;
-		if(!vertex->visited){
 			vertex->visited = true;
-			int fuck = 0;
 			for(auto it = vertex->edges.begin(); it != vertex->edges.end(); it++){
 				auto * neighbor = g.vertices.find(*it)->second;
-				int fuck = vertex->distance + g.get_weight(vertex->id, neighbor->id);
-				if(fuck < neighbor->distance){
+				float dist = vertex->distance + g.get_weight(vertex->id, neighbor->id);
+				if(dist < neighbor->distance){
 					neighbor->prev = vertex->id;
-					neighbor->distance = fuck;
-					if(!neighbor->visited){
+					neighbor->distance = dist;
 					priority_queue.push(neighbor);
-					//std::cout<<"pushing: " << neighbor->id << std::endl;
-				}
 				}
 			}
-	}
 		
+		}
 	}
-}
 	return total;
 }
 

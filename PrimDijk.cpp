@@ -26,34 +26,28 @@ template <class T>
 float primdijk(Graph<T>& g, T src, float c) {
 	std::priority_queue<Vertex<T> *, std::vector<Vertex<T> *>, bool(*)(Vertex<T> *, Vertex<T> *)> priority_queue(comparePQ);
 
-	auto source = g.vertices.find(src)->second;
-	float count = 0;
-
-	source->distance = 0;
-	source->visited = true;
+	Vertex<T>* source = g.vertices.find(src)->second;
 	priority_queue.push(source);
-
+	source->distance = 0;
+	float total = 0;
 	while(!priority_queue.empty()){
 		auto vertex = priority_queue.top();
 		priority_queue.pop();
-		for(auto it = vertex->edges.begin(); it != vertex->edges.end(); it++){
-			Vertex<T> * neighbor = g.vertices.find(*it)->second;
-			if(!neighbor->visited){
-				auto length = c*vertex->distance + g.get_weight(vertex->id, neighbor->id);
-				if(neighbor->distance > length){
-					neighbor->distance = length;
-					count += g.get_weight(vertex->id, neighbor->id);
-					neighbor->visited = true;
+		if(!vertex->visited){
+			total += g.get_weight(vertex->id, vertex->prev);
+			vertex->visited = true;
+			for(auto it = vertex->edges.begin(); it != vertex->edges.end(); it++){
+				auto * neighbor = g.vertices.find(*it)->second;
+				float dist = c*vertex->distance + g.get_weight(vertex->id, neighbor->id);
+				if(dist < neighbor->distance){
+					neighbor->prev = vertex->id;
+					neighbor->distance = dist;
 					priority_queue.push(neighbor);
 				}
 			}
+		
 		}
 	}
-	float total = 0;
-	for(auto it = g.vertices.begin(); it != g.vertices.end(); it++){
-		total += it->second->distance;
-	}
-	
-  return count-2;
+	return total;
 }
 #endif
