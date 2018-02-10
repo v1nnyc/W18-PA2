@@ -21,42 +21,42 @@ bool comparePQ(Vertex<T> * vertex1, Vertex<T> * vertex2){
 
 template <class T>
 float prim(Graph<T>& g, T src) {
-
-	auto source = g.vertices.find(src)->second;
-	int visitedCount = 0;
-
+Vertex<T>* source = g.vertices[src];
 	source->distance = 0;
 	source->visited = true;
+	std::priority_queue<Alarm<T>, std::vector<Alarm<T>>> pq;
 
-	std::priority_queue<Vertex<T> *, std::vector<Vertex<T> *>, bool(*)(Vertex<T> *, Vertex<T> *)> priority_queue(comparePQ);
-	
-	priority_queue.push(source);
-	while(!priority_queue.empty()){
-		auto parent = priority_queue.top();
-		priority_queue.pop();
-		parent->visited = true;
-		//reduce runtime by breaking out of loop when everything has been visited
-		if(++visitedCount == g.vertices.size()){
-			break;
-		}
-		for(auto it = parent->edges.begin(); it != parent->edges.end(); it++){
-			Vertex<T> * neighbor = g.vertices.find(*it)->second;
-			if(!neighbor->visited){
-				auto length = g.get_weight(parent->id, neighbor->id);
-				std::cout<<"vertex is: " << neighbor->id << " and weight is: " << neighbor->distance << "\n";
-				if(neighbor->distance > length){
-					neighbor->distance = length;
-					priority_queue.push(neighbor);
-				}
+	float total = 0;
+
+	for(auto it = source->edges.begin(); it != source->edges.end(); it++){
+		T src = source->id;
+		T dest = g.vertices[*it]->id;
+		float weight = g.get_weight(source->id, *it); 
+		
+		auto alarm = Alarm<T>(src, dest, weight);
+		
+		pq.push(alarm);
+	}	
+
+	while(!pq.empty()){
+		auto cur = pq.top();
+		auto dest = g.vertices[cur.dest];
+		auto src = g.vertices[cur.src];
+		pq.pop();
+		if(!dest->visited){
+			dest->visited = true;
+			dest->prev = src->id;
+			total += g.get_weight(dest->id, src->id);
+			dest->distance = 
+				src->distance 
+				+ g.get_weight(dest->id, src->id);
+			for(auto it = dest->edges.begin(); it != dest->edges.end(); it++){
+				float time = g.get_weight(dest->id, g.vertices[*it]->id);
+				auto alarm = Alarm<T>(dest->id, *it, time);
+				pq.push(alarm);
 			}
 		}
 	}
-
-	float total = 0;
-	for(auto it = g.vertices.begin(); it != g.vertices.end(); it++){
-		total += it->second->distance;
-	}
-
-  return total;
+	return total;
 }
 #endif

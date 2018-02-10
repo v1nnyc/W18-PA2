@@ -24,7 +24,7 @@ float rateCheck(float start, float firstTF, float exRate, float secondTF){
 
 bool bitvest(std::list<Exchange> exchanges, std::map<std::string, float> fees) {
 	std::map<std::string, float> weights;
-	std::map<std::string, float> origWeights;
+	//std::map<std::string, float> origWeights;
 	for(auto itFees = fees.begin(); itFees != fees.end(); itFees++){
 		weights.emplace(itFees->first, 0);
 		//origWeights.emplace(itFees->first, 0);

@@ -13,9 +13,6 @@
 #include <queue>
 #include <vector>
 
-//#include "Prim.hpp"
-//#include "Dijkstra.hpp"
-
 //dijsktra
 template <class T>
 bool comparePQ(Vertex<T> * vertex1, Vertex<T> * vertex2){
@@ -24,30 +21,42 @@ bool comparePQ(Vertex<T> * vertex1, Vertex<T> * vertex2){
 
 template <class T>
 float primdijk(Graph<T>& g, T src, float c) {
-	std::priority_queue<Vertex<T> *, std::vector<Vertex<T> *>, bool(*)(Vertex<T> *, Vertex<T> *)> priority_queue(comparePQ);
-
-	Vertex<T>* source = g.vertices.find(src)->second;
-	priority_queue.push(source);
+	Vertex<T>* source = g.vertices[src];
 	source->distance = 0;
+	source->visited = true;
+	std::priority_queue<Alarm<T>, std::vector<Alarm<T>>> pq;
+
 	float total = 0;
-	while(!priority_queue.empty()){
-		auto vertex = priority_queue.top();
-		priority_queue.pop();
-		if(!vertex->visited){
-			total += g.get_weight(vertex->id, vertex->prev);
-			vertex->visited = true;
-			for(auto it = vertex->edges.begin(); it != vertex->edges.end(); it++){
-				auto * neighbor = g.vertices.find(*it)->second;
-				float dist = c*vertex->distance + g.get_weight(vertex->id, neighbor->id);
-				if(dist < neighbor->distance){
-					neighbor->prev = vertex->id;
-					neighbor->distance = dist;
-					priority_queue.push(neighbor);
-				}
-			}
+
+	for(auto it = source->edges.begin(); it != source->edges.end(); it++){
+		T src = source->id;
+		T dest = g.vertices[*it]->id;
+		float weight = g.get_weight(source->id, *it); 
 		
+		auto alarm = Alarm<T>(src, dest, weight);
+		
+		pq.push(alarm);
+	}	
+
+	while(!pq.empty()){
+		auto cur = pq.top();
+		auto dest = g.vertices[cur.dest];
+		auto src = g.vertices[cur.src];
+		pq.pop();
+		if(!dest->visited){
+			dest->visited = true;
+			dest->prev = src->id;
+			total += g.get_weight(dest->id, src->id);
+			dest->distance = 
+				src->distance 
+				+ g.get_weight(dest->id, src->id);
+			for(auto it = dest->edges.begin(); it != dest->edges.end(); it++){
+				float time = c*dest->distance + g.get_weight(dest->id, g.vertices[*it]->id);
+				auto alarm = Alarm<T>(dest->id, *it, time);
+				pq.push(alarm);
+			}
 		}
 	}
-	return total;
+	return total ;
 }
 #endif
