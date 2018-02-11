@@ -1,8 +1,8 @@
 // CSE 101 Winter 2018, PA 2
 //
-// Name: TODO put both partners' info if applicable
-// PID: TODO
-// Sources of Help: TODO
+// Name: Vincent Cannalla
+// PID: A13006747
+// Sources of Help: https://docs.google.com/document/d/11gDhryHYfcQMGPQlQXj65jfKAlEG5KKsd57Xrtfj-oM/edit
 // Due: February 9th, 2018 at 11:59 PM
 
 #ifndef __DIJKSTRA_CPP__

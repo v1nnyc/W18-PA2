@@ -1,8 +1,8 @@
 // CSE 101 Winter 2018, PA 2
 //
-// Name: TODO put both partners' info if applicable
-// PID: TODO
-// Sources of Help: TODO
+// Name: Vincent Cannalla
+// PID: A13006747
+// Sources of Help: https://brilliant.org/wiki/bellman-ford-algorithm/
 // Due: February 9th, 2018 at 11:59 PM
 
 #ifndef __BITVEST_CPP__
@@ -35,6 +35,7 @@ bool bitvest(std::list<Exchange> exchanges, std::map<std::string, float> fees) {
 	auto startt = startIt->first;
 	auto curr = startt;
 	
+	//run twice bc sometimes it doesn't work only doing it once
 	for(int i = 0; i < 2; i++){
 	//iterate through fees like vertices
 		for(auto itFees = fees.begin(); itFees != fees.end(); itFees++){
